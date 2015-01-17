@@ -1,0 +1,60 @@
+#     <image type="diffusion-weighted">
+#       <name>S</name> <channel>input</channel> <index>0</index>
+#       <label>Input DWI Volume</label>
+#     </image>
+#     <image type="label">
+#       <name>seeds</name> <channel>input</channel> <index>1</index>
+#       <label>Input Label Map (seed in nonzero voxels)</label>
+#     </image>
+
+
+XML = """<?xml version="1.0" encoding="utf-8"?>
+<executable>
+
+  <category>Tractography</category>
+  <title>Python Streamline 2</title>
+  <description>Streamline tractography.</description>
+
+  <parameters>
+    <label>IO</label>
+    <description>Input/output parameters</description>
+
+    <geometry type = "fiberbundle">
+      <name>ff</name> <channel>output</channel> <index>0</index>
+      <label>Output Fiber bundle</label>
+    </geometry>
+
+  </parameters>
+</executable>
+"""
+
+from Slicer import slicer
+
+def Execute(ff):
+    scene = slicer.MRMLScene
+
+#     # grab diffusion weighted signal and gradients
+#     dwi = scene.GetNodeByID(S)
+#     S = dwi.GetImageData().ToArray()
+#     u = dwi.GetDiffusionGradients().ToArray().astype('float')
+#     b = dwi.GetBValues().ToArray().astype('float')
+
+#     # grab seed ROI
+#     seeds = scene.GetNodeByID(seeds).GetImageData().ToArray()
+
+    pts = slicer.vtkPoints()
+    lines = slicer.vtkCellArray()
+
+#     lines.InsertNextCell(3)
+#     pts.InsertNextPoint( 1, 1, 1);   lines.InsertCellPoint(0)
+#     pts.InsertNextPoint( 0, 0, 0);   lines.InsertCellPoint(1)
+#     pts.InsertNextPoint(-1,-1,-1);   lines.InsertCellPoint(2)
+
+    ff = scene.GetNodeByID(ff)
+    ff.SetAndObservePolyData(slicer.vtkPolyData())
+    pd = ff.GetPolyData()
+    pd.SetPoints(pts)
+    pd.SetLines(lines)
+    pd.Update()
+
+    return
